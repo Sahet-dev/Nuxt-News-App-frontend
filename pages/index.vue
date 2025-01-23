@@ -1,50 +1,109 @@
-<template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
-    <div class="max-w-4xl mx-auto">
-      <!-- Header Section -->
-      <div class="mb-10 text-center">
-        <h2 class="text-4xl font-serif tracking-tight text-gray-900 mb-4">News Articles</h2>
-        <div class="h-1 w-20 bg-blue-500 mx-auto rounded-full"></div>
-      </div>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useArticleStore } from '@/stores/articleStore';
+import {formatDistanceToNow} from "date-fns";
 
-      <!-- Articles List -->
-      <div class="bg-white rounded-2xl shadow-lg ring-1 ring-gray-100">
-        <ul class="divide-y divide-gray-100">
-          <li v-for="article in articleStore.articles"
-              :key="article.id"
-              class="group hover:bg-gray-50 transition-colors duration-200">
-            <NuxtLink
-                :to="`/articles/${article.id}`"
-                class="block p-6 sm:px-8"
-            >
-              <div class="flex items-center justify-between">
-                <h3 class="text-lg font-medium text-gray-900 group-hover:text-blue-600 transition-colors duration-200">
+const articles = useArticleStore();
+
+const formatDate = (dateString) => {
+  const options = {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  };
+  return new Date(dateString).toLocaleDateString('en-US', options);
+};
+
+onMounted(() => {
+  articles.fetchArticles();
+});
+
+const selectedCategory = ref('All');
+
+const categories = computed(() => {
+  const uniqueCategories = new Set(articles.articles.map((article) => article.categoryName));
+  return ['All', ...uniqueCategories]; // Add "All" for showing all articles
+});
+
+const filteredArticles = computed(() => {
+  if (selectedCategory.value === 'All') {
+    return articles.articles;
+  }
+  return articles.articles.filter((article) => article.categoryName === selectedCategory.value);
+});
+
+
+const formattedPublishedAt = computed(() => {
+  return articles.article?.publishedAt
+      ? formatDistanceToNow(new Date(articles.article.publishedAt), { addSuffix: true })
+      : '';
+});
+
+</script>
+
+<template>
+  <div class="min-h-screen bg-gray-50 font-serif">
+    <!-- Category Buttons -->
+    <div class="flex overflow-x-auto space-x-4 py-6 px-4">
+      <button
+          v-for="category in categories"
+          :key="category"
+          @click="selectedCategory = category"
+          :class="[
+          'whitespace-nowrap px-4 py-2 rounded-lg font-semibold',
+          selectedCategory === category ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+        ]"
+      >
+        {{ category }}
+      </button>
+    </div>
+
+    <!-- News Section -->
+    <div
+        v-if="filteredArticles.length > 0"
+        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 bg-white shadow-sm rounded-xl"
+    >
+      <div class="space-y-12">
+        <div
+            v-for="article in filteredArticles"
+            :key="article.id"
+            class="bg-white rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl"
+        >
+          <NuxtLink :to="`/articles/${article.id}`" class="block p-4 sm:px-6">
+            <div class="grid md:grid-cols-2 gap-4 md:gap-8">
+              <!-- Text Section -->
+              <div class="order-2 md:order-1 p-4 sm:p-8">
+                <span class="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
+                  {{ article.categoryName }}
+                </span>
+                <h3 class="mt-4 text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
                   {{ article.title }}
                 </h3>
-                <svg
-                    class="w-5 h-5 text-gray-400 group-hover:text-blue-500 transform group-hover:translate-x-1 transition-all duration-200"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-                </svg>
+                <div class="mt-6 text-sm text-gray-500 font-medium">
+                  {{ formattedPublishedAt }}
+                </div>
               </div>
-            </NuxtLink>
-          </li>
-        </ul>
+
+              <!-- Image Section -->
+              <div class="order-1 md:order-2">
+                <img
+                    :src="article.imageUrl || '/default.jpg'"
+                    :alt="article.title"
+                    class="w-full h-40 sm:h-64 md:h-full object-cover"
+                />
+              </div>
+            </div>
+          </NuxtLink>
+        </div>
       </div>
+    </div>
+
+    <!-- No Articles Message -->
+    <div v-else class="text-center text-gray-500 py-12">
+      No articles found for the selected category.
     </div>
   </div>
 </template>
 
-<script setup>
-import { onMounted } from 'vue';
-import { useArticleStore } from '@/stores/articleStore';
-
-const articleStore = useArticleStore();
-
-onMounted(() => {
-  articleStore.fetchArticles();
-});
-</script>

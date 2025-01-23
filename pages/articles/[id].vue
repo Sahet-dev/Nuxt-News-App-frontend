@@ -10,11 +10,10 @@
         <div class="flex items-center space-x-4 text-sm">
           <div class="flex items-center text-gray-600">
             <span class="inline-flex items-center px-3 py-1 rounded-full bg-gray-100">
-              {{ articleStore.article.category?.name || 'No category' }}
+               {{ articleStore.article.categoryName }}
             </span>
           </div>
           <div class="text-gray-500">
-            <!--            {{ new Date(articleStore.article.publishedAt).toLocaleString() }}-->
             {{ formattedPublishedAt }}
           </div>
         </div>
@@ -71,61 +70,47 @@
 </template>
 
 <script setup>
-import {onMounted, watch, ref, computed} from 'vue';
+import { onMounted, watch, ref, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useArticleStore } from '@/stores/articleStore';
 import { useAuthStore } from '@/stores/authStore';
 import { formatDistanceToNow } from 'date-fns';
+import { useHead } from '@vueuse/head';
 
 const articleStore = useArticleStore();
-// const authStore = null;
 const authStore = useAuthStore();
 const route = useRoute();
-
+const config = useRuntimeConfig()
+const baseUrl = config.public.BASE_URL
 const pageTitle = ref('Loading...');
-
-
-
 const formattedPublishedAt = computed(() => {
   return articleStore.article?.publishedAt
       ? formatDistanceToNow(new Date(articleStore.article.publishedAt), { addSuffix: true })
       : '';
 });
 
+const { data: article } = await useAsyncData(() =>
+    fetch(`${baseUrl}/api/news/${route.params.id}`).then(res => res.json())
+);
 
+onMounted(async () => {
+  await articleStore.fetchArticle(route.params.id); // Fetch article data
 
-
-
-
-
-//
-// const getTurkmenTimeAgo = (date) => {
-//   const diff = (Date.now() - new Date(date).getTime()) / 1000; // Difference in seconds
-//   const MINUTES = 60;
-//   const HOURS = 60 * MINUTES;
-//   const DAYS = 24 * HOURS;
-//   const YEARS = 365 * DAYS;
-//
-//   if (diff < MINUTES) return `${Math.floor(diff)} sekunt ozal`;
-//   if (diff < HOURS) return `${Math.floor(diff / MINUTES)} minut ozal`;
-//   if (diff < DAYS) return `${Math.floor(diff / HOURS)} sagat ozal`;
-//   if (diff < YEARS) return `${Math.floor(diff / DAYS)} gün ozal`;
-//   return `${Math.floor(diff / YEARS)} ýyl öň`;
-// };
-//
-// const formattedPublishedAt = computed(() => {
-//   return articleStore.article?.publishedAt
-//       ? getTurkmenTimeAgo(articleStore.article.publishedAt)
-//       : '';
-// });
-
-
-
-
-
-
-onMounted(() => {
-  fetchArticleAndSetTitle();
+  if (articleStore.article) {
+    useHead({
+      title: articleStore.article.title,
+      meta: [
+        { name: 'description', content: articleStore.article.content.slice(0, 150) },
+        { property: 'og:title', content: articleStore.article.title },
+        { property: 'og:description', content: articleStore.article.content.slice(0, 150) },
+        { property: 'og:image', content: articleStore.article.imageUrl },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:title', content: articleStore.article.title },
+        { name: 'twitter:description', content: articleStore.article.content.slice(0, 150) },
+        { name: 'twitter:image', content: articleStore.article.imageUrl },
+      ],
+    });
+  }
 });
 
 watch(() => route.params.id, () => {
@@ -133,7 +118,7 @@ watch(() => route.params.id, () => {
 });
 
 async function fetchArticleAndSetTitle() {
-  await articleStore.fetchArticle(route.params.id); // Fetch article data
+  await articleStore.fetchArticle(route.params.id);
   if (articleStore.article?.title) {
     pageTitle.value = articleStore.article.title;
     document.title = `${articleStore.article.title} - Döwür. Dünýäde ýene nämeler täzelikler...`; // Update page title

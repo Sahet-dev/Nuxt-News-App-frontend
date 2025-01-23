@@ -1,13 +1,18 @@
+<script setup>
+import Navbar from '~/components/Navbar.vue';
+import { onMounted } from 'vue';
+import { useAuthStore } from '@/stores/authStore';
+
+const authStore = useAuthStore();
+onMounted(() => {
+  authStore.checkLoginStatus();
+});
+</script>
+
 <template>
   <div>
-    <header>
-      <nav>
-        <ul>
-          <li><NuxtLink to="/posts/1">Post 1</NuxtLink></li>
-          <li><NuxtLink to="/posts/2">Post 2</NuxtLink></li>
-        </ul>
-      </nav>
-    </header>
+    <Navbar />
+
     <NuxtPage />
   </div>
 </template>
