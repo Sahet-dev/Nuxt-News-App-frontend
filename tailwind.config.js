@@ -8,8 +8,12 @@ export default {
     './nuxt.config.{js,ts}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        'custom-blue': '#1b1a79',
+        'custom-red': '#cc0e35',
+      }
+    },
   },
   plugins: [],
 }
-

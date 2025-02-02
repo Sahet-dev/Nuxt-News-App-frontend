@@ -38,7 +38,7 @@ const formattedPublishedAt = (date) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gray-50 font-serif">
+  <div class="min-h-screen bg-gray-50 font-serif pt-16">
     <!-- Category Buttons -->
     <div class="flex overflow-x-auto space-x-4 py-6 px-4">
       <button
