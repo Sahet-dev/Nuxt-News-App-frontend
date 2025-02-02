@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gradient-to-br from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8 pt-22">
     <div class="max-w-4xl mx-auto">
       <!-- Header Section -->
       <div class="mb-10 text-center">
@@ -62,3 +62,8 @@ await useAsyncData('articles', async () => {
   return articles.value;
 });
 </script>
+<style>
+.pt-22 {
+  padding-top: 5.6rem;  /* or 88px */
+}
+</style>

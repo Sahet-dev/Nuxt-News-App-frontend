@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+  <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md pt-22">
     <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Create New Article</h2>
 
     <form @submit.prevent="createArticle">
@@ -125,3 +125,8 @@ const createArticle = async () => {
   }
 };
 </script>
+<style>
+.pt-22 {
+  padding-top: 5.6rem;  /* or 88px */
+}
+</style>

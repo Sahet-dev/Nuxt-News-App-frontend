@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8">
+  <div class="min-h-screen bg-gradient-to-b from-gray-50 to-white py-12 px-4 sm:px-6 lg:px-8 pt-22">
     <!-- Loading State -->
     <div v-if="loading" class="text-center text-gray-500">Loading article...</div>
 
@@ -140,3 +140,8 @@ useHead(() => {
   };
 });
 </script>
+<style>
+.pt-22 {
+  padding-top: 5.5rem;  /* or 88px */
+}
+</style>

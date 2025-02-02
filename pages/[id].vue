@@ -1,5 +1,5 @@
 <template>
-  <div v-if="articleStore.article" class="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg">
+  <div v-if="articleStore.article" class="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg pt-22">
     <h2 class="text-3xl font-semibold text-gray-800 text-center mb-8">Update Article</h2>
 
     <form @submit.prevent="handleSubmit" class="space-y-6">
@@ -147,6 +147,8 @@ const handleSubmit = async () => {
 
 </script>
 
-<style scoped>
-/* Custom styles */
+<style>
+.pt-22 {
+  padding-top: 5.6rem;  /* or 88px */
+}
 </style>
