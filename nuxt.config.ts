@@ -2,7 +2,9 @@ import { defineNuxtConfig } from "nuxt/config";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  nitro: undefined,
+  nitro: {
+    preset: 'netlify'
+  },
   $development: undefined, $env: undefined, $meta: undefined, $production: undefined, $test: undefined,
   css: ['~/assets/css/main.css'],
   postcss: {
@@ -20,6 +22,7 @@ export default defineNuxtConfig({
   modules: ['@pinia/nuxt', '@nuxtjs/sitemap',],
   sitemap: {
     hostname: 'https://dowur-news.com',
+    cacheTime: 1000 * 60 * 60 * 24,
     // hostname: 'http://localhost:3000',
     routes: async () => {
       const BASE_URL =   'https://dowur-news.shop';
