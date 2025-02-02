@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import axios from 'axios';
-import { useRuntimeConfig } from '#app'; // Use Nuxt runtime config for the BASE_URL
+import { useRuntimeConfig } from '#app';
 
 export const useArticleStore = defineStore('articleStore', () => {
     const articles = ref([]);
@@ -12,15 +12,20 @@ export const useArticleStore = defineStore('articleStore', () => {
     const BASE_URL = config.public.BASE_URL;
 
     const fetchArticles = async () => {
+        if (articles.value.length) return; // Prevent duplicate API calls
+
         try {
-            const { data } = await axios.get(`${BASE_URL}/api/news/all`);
-            articles.value = data;
+            const response = await axios.get(`${BASE_URL}/api/news/all`);
+            articles.value = response.data;
         } catch (error) {
             console.error('Failed to fetch articles:', error);
         }
     };
 
+
     const fetchArticle = async (id) => {
+        if (article.value && article.value.id === id) return;
+
         try {
             const { data } = await axios.get(`${BASE_URL}/api/news/${id}`);
             article.value = data;
@@ -28,6 +33,10 @@ export const useArticleStore = defineStore('articleStore', () => {
             console.error('Failed to fetch article:', error);
         }
     };
+
+
+
+
 
     const refreshArticles = async () => {
         await fetchArticles();

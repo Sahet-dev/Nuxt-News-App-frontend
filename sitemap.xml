@@ -21,24 +21,5 @@
         <priority>0.7</priority>
     </url>
 
-<!--    <url>-->
-<!--        <loc>http://localhost:8080/articles/1</loc>-->
-<!--        <lastmod>2024-01-01</lastmod>-->
-<!--        <priority>0.7</priority>-->
-<!--    </url>-->
-<!--    <url>-->
-<!--        <loc>http://localhost:8080/articles/2</loc>-->
-<!--        <lastmod>2024-01-02</lastmod>-->
-<!--        <priority>0.7</priority>-->
-<!--    </url>-->
-<!--    <url>-->
-<!--        <loc>http://localhost:8080/articles/3</loc>-->
-<!--        <lastmod>2024-01-02</lastmod>-->
-<!--        <priority>0.7</priority>-->
-<!--    </url>-->
-<!--    <url>-->
-<!--        <loc>http://localhost:8080/articles/4</loc>-->
-<!--        <lastmod>2024-01-02</lastmod>-->
-<!--        <priority>0.7</priority>-->
-<!--    </url>-->
+
 </urlset>

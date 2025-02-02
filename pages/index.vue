@@ -1,46 +1,40 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed } from 'vue';
 import { useArticleStore } from '@/stores/articleStore';
-import {formatDistanceToNow} from "date-fns";
+import { useAsyncData } from '#imports';
+import { formatDistanceToNow } from 'date-fns';
 
-const articles = useArticleStore();
+const articleStore = useArticleStore();
 
-const formatDate = (dateString) => {
-  const options = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  };
-  return new Date(dateString).toLocaleDateString('en-US', options);
-};
+// Fetch articles server-side using useAsyncData
+const { data: articlesData } = await useAsyncData('articles', () => articleStore.fetchArticles());
 
-onMounted(() => {
-  articles.fetchArticles();
-});
+// Set articles once fetched
+if (articlesData.value) {
+  articleStore.articles = articlesData.value;
+}
 
+// Selected category state
 const selectedCategory = ref('All');
 
+// Compute unique categories
 const categories = computed(() => {
-  const uniqueCategories = new Set(articles.articles.map((article) => article.categoryName));
-  return ['All', ...uniqueCategories]; // Add "All" for showing all articles
+  const uniqueCategories = new Set(articleStore.articles.map((article) => article.categoryName));
+  return ['All', ...uniqueCategories];
 });
 
+// Filter articles based on selected category
 const filteredArticles = computed(() => {
   if (selectedCategory.value === 'All') {
-    return articles.articles;
+    return articleStore.articles;
   }
-  return articles.articles.filter((article) => article.categoryName === selectedCategory.value);
+  return articleStore.articles.filter((article) => article.categoryName === selectedCategory.value);
 });
 
-
-const formattedPublishedAt = computed(() => {
-  return articles.article?.publishedAt
-      ? formatDistanceToNow(new Date(articles.article.publishedAt), { addSuffix: true })
-      : '';
-});
-
+// Format published date
+const formattedPublishedAt = (date) => {
+  return date ? formatDistanceToNow(new Date(date), { addSuffix: true }) : '';
+};
 </script>
 
 <template>
@@ -82,7 +76,7 @@ const formattedPublishedAt = computed(() => {
                   {{ article.title }}
                 </h3>
                 <div class="mt-6 text-sm text-gray-500 font-medium">
-                  {{ formattedPublishedAt }}
+                  {{ formattedPublishedAt(article.publishedAt) }}
                 </div>
               </div>
 
@@ -106,4 +100,3 @@ const formattedPublishedAt = computed(() => {
     </div>
   </div>
 </template>
-

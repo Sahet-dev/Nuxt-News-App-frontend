@@ -10,7 +10,7 @@
       <!-- Articles List -->
       <div class="bg-white rounded-2xl shadow-lg ring-1 ring-gray-100">
         <ul class="divide-y divide-gray-100">
-          <li v-for="article in articleStore.articles"
+          <li v-for="article in articles"
               :key="article.id"
               class="group hover:bg-gray-50 transition-colors duration-200">
             <NuxtLink
@@ -39,12 +39,26 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
 import { useArticleStore } from '@/stores/articleStore';
+import { useAsyncData, useState, useHead } from '#app';
 
 const articleStore = useArticleStore();
+const articles = useState('cachedArticles', () => articleStore.articles); // Persist articles across pages
 
-onMounted(() => {
-  articleStore.fetchArticles();
+useHead({
+  title: 'Latest News Articles',
+  meta: [
+    { name: 'description', content: 'Stay updated with the latest news articles.' },
+    { property: 'og:title', content: 'Latest News Articles' },
+    { property: 'og:description', content: 'Stay updated with the latest news articles.' },
+  ],
+});
+
+// Only fetch if articles are empty
+await useAsyncData('articles', async () => {
+  if (!articles.value.length) {
+    await articleStore.fetchArticles();
+  }
+  return articles.value;
 });
 </script>

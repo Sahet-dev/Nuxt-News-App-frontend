@@ -4,7 +4,6 @@ import { defineNuxtConfig } from "nuxt/config";
 export default defineNuxtConfig({
   nitro: undefined,
   $development: undefined, $env: undefined, $meta: undefined, $production: undefined, $test: undefined,
-  ssr: true,
   css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {
@@ -14,14 +13,17 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      BASE_URL: process.env.BASE_URL || 'https://www.dowur-news.shop',
+      BASE_URL:  'https://dowur-news.shop',
+      // BASE_URL:  'http://localhost:8080',
     },
   },
   modules: ['@pinia/nuxt', '@nuxtjs/sitemap',],
   sitemap: {
-    hostname: process.env.BASE_URL || 'http://localhost:8080',
+    hostname: 'https://dowur-news.com',
+    // hostname: 'http://localhost:3000',
     routes: async () => {
-      const BASE_URL = process.env.BASE_URL || 'http://localhost:8080';
+      const BASE_URL =   'https://dowur-news.shop';
+      // const BASE_URL =   'http://localhost:8080';
       try {
         // Fetch all articles from the backend
         const response = await fetch(`${BASE_URL}/api/news/all`);
@@ -29,9 +31,9 @@ export default defineNuxtConfig({
 
         // Map articles to individual URLs
         return articles.map(article => ({
-          url: `/articles/${article.id}`, // Construct the route
-          lastmod: article.publishedAt,  // Optional: Use `publishedAt` for the last modification date
-          priority: 0.7,                 // Adjust priority as needed
+          url: `/articles/${article.id}`,
+          lastmod: article.publishedAt,
+          priority: 0.7,
         }));
       } catch (error) {
         console.error('Failed to fetch articles for sitemap:', error);
@@ -42,22 +44,26 @@ export default defineNuxtConfig({
   robots: {
     UserAgent: '*',
     Allow: '/',
-    Sitemap: 'https://nuxt.sahet-dev.com/sitemap.xml',
+    Sitemap: 'https://dowur-news.com/sitemap.xml',
   },
   app: {
     head: {
-      title: 'DowurNews',
+      title: 'Döwür News',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'A modern news application built with Nuxt.' },
       ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+      ],
     },
   },
   compatibilityDate: '2024-11-01',
-  target: 'static',
+  ssr: true,
+  target: 'server',
   seo: {
     site: {
-      url: 'https://nuxt.sahet-dev.com/'  // Your site's URL
+      url: 'https://dowur-news.com/'
     }
   },
   devtools: { enabled: true }

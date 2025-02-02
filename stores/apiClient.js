@@ -1,22 +1,25 @@
 import axios from 'axios';
 import { useRuntimeConfig } from '#app';
 
-const config = useRuntimeConfig();
-const apiClient = axios.create({
-    baseURL: config.public.BASE_URL,
-    headers: {
-        'Content-Type': 'application/json'
-    }
-});
+export default function createApiClient() {
+    const config = useRuntimeConfig();
 
-apiClient.interceptors.request.use(config => {
-    const token = localStorage.getItem('authToken');
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-}, error => {
-    return Promise.reject(error);
-});
+    const apiClient = axios.create({
+        baseURL: config.public.BASE_URL,
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
 
-export default apiClient;
+    apiClient.interceptors.request.use(config => {
+        const token = localStorage.getItem('authToken');
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
+    }, error => {
+        return Promise.reject(error);
+    });
+
+    return apiClient;
+}

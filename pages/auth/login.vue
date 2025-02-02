@@ -79,6 +79,7 @@ const handleSubmit = async () => {
     const { token, role } = response.data;
 
     authStore.login(token, role);
+    navigateTo('/');
   } catch (error) {
     errorMessage.value = 'Login failed. Please check your credentials and try again.';
     console.error(error);
