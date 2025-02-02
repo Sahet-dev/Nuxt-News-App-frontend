@@ -12,6 +12,10 @@ onMounted(() => {
 <template>
   <div>
     <Navbar />
+    <br>
+    <br>
+    <br>
     <NuxtPage />
+
   </div>
 </template>

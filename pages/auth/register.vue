@@ -80,7 +80,7 @@
 <script setup>
 import { ref } from 'vue';
 import axios from 'axios';
-import apiClient from "@/stores/apiClient.js";
+import {useRuntimeConfig} from "#app";
 
 const name = ref('');
 const username = ref('');
@@ -88,12 +88,13 @@ const email = ref('');
 const password = ref('');
 const errorMessage = ref('');
 const successMessage = ref('');
+const config = useRuntimeConfig();
+const baseUrl = config.public.BASE_URL;
 
 const handleRegister = async () => {
   try {
     const response = await axios.post(
-        // 'http://localhost:8080/register',
-        'http://145.223.102.7:8080/register',
+        `${baseUrl}/register`,
         {
           name: name.value,
           username: username.value,
