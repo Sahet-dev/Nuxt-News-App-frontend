@@ -1,5 +1,16 @@
 <template>
   <div class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md pt-22">
+    <transition
+        name="fade"
+
+    >
+      <div
+          v-if="notification.visible"
+          class="fixed top-4 right-4 bg-green-500 text-white p-3 rounded"
+      >
+        {{ notification.message }}
+      </div>
+    </transition>
     <h2 class="text-3xl font-semibold text-center text-gray-800 mb-6">Create New Article</h2>
 
     <form @submit.prevent="createArticle">
@@ -93,10 +104,10 @@
 
 <script setup>
 import {ref} from 'vue';
-import { useRuntimeConfig } from '#app';
 import {useRouter} from 'vue-router';
-import apiClient from "~/stores/apiClient.js";
+import createApiClient from "~/stores/apiClient.js";
 
+const apiClient = createApiClient();
 const form = ref({
   title: '',
   content: '',
@@ -107,28 +118,55 @@ const form = ref({
 const successMessage = ref('');
 const errorMessage = ref('');
 const router = useRouter();
+const notification = ref({ message: '', visible: false });
+
+const showNotification = (message) => {
+  notification.value.message = message;
+  notification.value.visible = true;
+
+  setTimeout(() => {
+    notification.value.visible = false;
+  }, 3000);
+};
 
 const createArticle = async () => {
-  try {
-    console.log("Submitting form data:", form.value);
 
-    await apiClient.post('/admin/add', form.value);
-    successMessage.value = 'Article created successfully!';
-    form.value = {
-      title: '',
-      content: '',
-      imageUrl: '',
-      categoryName: '',
-      publishedAt: null,
-    };
+  try {
+    await apiClient.post('admin/add', form.value);
+
+    form.value = { title: '', content: '', imageUrl: '', categoryName: '', publishedAt: null };
+    showNotification('Article updated successfully!');
     setTimeout(() => router.push('/articles'), 2000);
   } catch (error) {
+    console.error("API request failed:", error); // Log error details
     errorMessage.value = 'Failed to create article.';
   }
 };
+
 </script>
+
 <style>
-.pt-22 {
-  padding-top: 5.6rem;  /* or 88px */
+.fade-enter-from{
+  opacity: 0;
+  transform: translateY(-60px);
+}
+.fade-enter-to{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-enter-active {
+  transition: all 0.3s ease;
+}
+.fade-leave-from{
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-leave-to{
+  opacity: 0;
+  transform: translateY(-60px);
+}
+.fade-leave-active  {
+  transition: all 0.3s ease;
 }
 </style>

@@ -13,8 +13,6 @@ onMounted(() => {
   <div>
     <Navbar />
     <br>
-    <br>
-    <br>
     <NuxtPage />
 
   </div>

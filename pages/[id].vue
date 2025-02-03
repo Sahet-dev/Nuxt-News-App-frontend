@@ -1,5 +1,16 @@
 <template>
   <div v-if="articleStore.article" class="max-w-4xl mx-auto p-8 bg-white rounded-lg shadow-lg pt-22">
+    <transition
+        name="fade"
+
+    >
+      <div
+          v-if="notification.visible"
+          class="fixed top-4 right-4 bg-green-500 text-white p-3 rounded"
+      >
+        {{ notification.message }}
+      </div>
+    </transition>
     <h2 class="text-3xl font-semibold text-gray-800 text-center mb-8">Update Article</h2>
 
     <form @submit.prevent="handleSubmit" class="space-y-6">
@@ -97,8 +108,17 @@ import createApiClient from "~/stores/apiClient.js";
 const route = useRoute();
 const articleStore = useArticleStore();
 const config = useRuntimeConfig();
-const baseUrl = config.public.BASE_URL;
 const apiClient = createApiClient();
+const notification = ref({ message: '', visible: false });
+
+const showNotification = (message) => {
+  notification.value.message = message;
+  notification.value.visible = true;
+
+  setTimeout(() => {
+    notification.value.visible = false;
+  }, 3000);
+};
 
 const form = ref({
   title: '',
@@ -132,6 +152,7 @@ const handleSubmit = async () => {
   try {
     await apiClient.put(`admin/${route.params.id}`, form.value);
     successMessage.value = 'Article updated successfully!';
+    showNotification('Article updated successfully!');
     setTimeout(() => {
       successMessage.value = '';
     }, 3000);
@@ -148,7 +169,27 @@ const handleSubmit = async () => {
 </script>
 
 <style>
-.pt-22 {
-  padding-top: 5.6rem;  /* or 88px */
+.fade-enter-from{
+  opacity: 0;
+  transform: translateY(-60px);
+}
+.fade-enter-to{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.fade-enter-active {
+  transition: all 0.3s ease;
+}
+.fade-leave-from{
+  opacity: 1;
+  transform: translateY(0);
+}
+.fade-leave-to{
+  opacity: 0;
+  transform: translateY(-60px);
+}
+.fade-leave-active  {
+  transition: all 0.3s ease;
 }
 </style>
