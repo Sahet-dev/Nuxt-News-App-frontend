@@ -7,14 +7,19 @@ import { formatDistanceToNow } from 'date-fns';
 const articleStore = useArticleStore();
 
 // Fetch articles server-side using useAsyncData
-const { data: articlesData } = await useAsyncData('articles', () => articleStore.fetchArticles());
+// const { data: articlesData } = await useAsyncData('articles', () => articleStore.fetchArticles() || []);
+
+const { data: articlesData } = await useAsyncData('articles', async () => {
+  const fetchedArticles = await articleStore.fetchArticles();
+  return fetchedArticles || [];
+});
+
 
 // Set articles once fetched
 if (articlesData.value) {
   articleStore.articles = articlesData.value;
 }
 
-// Selected category state
 const selectedCategory = ref('All');
 
 // Compute unique categories
@@ -71,7 +76,7 @@ const formattedPublishedAt = (date) => {
               <div class="order-2 md:order-1 p-4 sm:p-8">
                 <span class="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-50 rounded-full">
                   {{ article.categoryName }}
-                </span>
+               </span>
                 <h3 class="mt-4 text-xl sm:text-2xl font-bold text-gray-900 leading-tight">
                   {{ article.title }}
                 </h3>

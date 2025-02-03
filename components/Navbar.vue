@@ -36,17 +36,10 @@
 
         <div class="hidden sm:flex sm:items-center sm:ml-6">
 
+          <NuxtLink to="/articles" class="block px-4 py-2 text-sm text-gray-500 hover:text-gray-700" @click="closeDropdown">Articles</NuxtLink>
 
 
-          <!-- Prices Button -->
-          <div class="relative hidden sm:flex sm:items-center sm:ml-6 mr-2">
-            <button
-                @click="openPrices"
-                class="relative inline-flex items-center border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150"
-            >
-              Prices
-            </button>
-          </div>
+
 
 
 
@@ -60,6 +53,9 @@
             </NuxtLink>
           </template>
           <template v-else>
+            <NuxtLink to="/articles/new" class="block px-4 py-2 text-sm text-gray-500 hover:text-gray-700"
+                      @click="closeDropdown"
+            >Create Article</NuxtLink>
             <div class=" ">
               <ul>
                 <li>
@@ -68,6 +64,7 @@
                       class="px-4 py-2 text-sm font-medium text-white bg-custom-red rounded-md hover:bg-red-700">
                     Logout
                   </button>
+
                 </li>
               </ul>
             </div>

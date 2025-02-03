@@ -83,19 +83,17 @@ import {useRoute} from 'vue-router';
 import {useAuthStore} from '@/stores/authStore';
 import {formatDistanceToNow} from 'date-fns';
 import {useHead} from '@vueuse/head';
-import {useAsyncData} from '#app'; // Ensure this is correctly imported
+import {useAsyncData} from '#app';
 
 const authStore = useAuthStore();
 const route = useRoute();
 const config = useRuntimeConfig();
 const baseUrl = config.public.BASE_URL;
 
-// State Variables
 const article = ref(null);
 const loading = ref(true);
 const error = ref(null);
 
-// Fetch Data
 const fetchArticle = async () => {
   try {
     loading.value = true;
@@ -112,7 +110,7 @@ const fetchArticle = async () => {
   }
 };
 
-// Fetch article on page load
+
 fetchArticle();
 
 // Format publish date

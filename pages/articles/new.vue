@@ -93,7 +93,7 @@
 
 <script setup>
 import {ref} from 'vue';
-import axios from 'axios';
+import { useRuntimeConfig } from '#app';
 import {useRouter} from 'vue-router';
 import apiClient from "~/stores/apiClient.js";
 
@@ -110,6 +110,8 @@ const router = useRouter();
 
 const createArticle = async () => {
   try {
+    console.log("Submitting form data:", form.value);
+
     await apiClient.post('/admin/add', form.value);
     successMessage.value = 'Article created successfully!';
     form.value = {

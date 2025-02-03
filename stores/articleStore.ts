@@ -12,15 +12,19 @@ export const useArticleStore = defineStore('articleStore', () => {
     const BASE_URL = config.public.BASE_URL;
 
     const fetchArticles = async () => {
-        if (articles.value.length) return; // Prevent duplicate API calls
+        if (articles.value.length) return articles.value; // Return existing data
 
         try {
             const response = await axios.get(`${BASE_URL}/api/news/all`);
             articles.value = response.data;
+            return response.data; // ✅ Return the fetched articles
         } catch (error) {
             console.error('Failed to fetch articles:', error);
+            return []; // Ensure it always returns an array
         }
     };
+
+
 
 
     const fetchArticle = async (id) => {

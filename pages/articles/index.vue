@@ -59,7 +59,7 @@ await useAsyncData('articles', async () => {
   if (!articles.value.length) {
     await articleStore.fetchArticles();
   }
-  return articles.value;
+  return articles.value || null;
 });
 </script>
 <style>
