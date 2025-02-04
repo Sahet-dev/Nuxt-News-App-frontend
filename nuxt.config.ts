@@ -55,6 +55,7 @@ export default defineNuxtConfig({
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { name: 'description', content: 'A modern news application built with Nuxt.' },
+        { name: 'google-site-verification', content: '7DU3PTICXXaok5RwiA02nHDmB53ZWR2oejJioBr2NRw' }
       ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
