@@ -19,30 +19,11 @@ export default defineNuxtConfig({
       // BASE_URL:  'http://localhost:8080',
     },
   },
-  modules: ['@pinia/nuxt', '@nuxtjs/sitemap',],
+  modules: ['@pinia/nuxt', '@nuxtjs/sitemap', '@nuxtjs/robots'],
   sitemap: {
-    hostname: 'https://dowur-news.com',
-    cacheTime: 1000 * 60 * 60 * 24,
-    // hostname: 'http://localhost:3000',
-    routes: async () => {
-      const BASE_URL =   'https://dowur-news.shop';
-      // const BASE_URL =   'http://localhost:8080';
-      try {
-        // Fetch all articles from the backend
-        const response = await fetch(`${BASE_URL}/api/news/all`);
-        const articles = await response.json();
-
-        // Map articles to individual URLs
-        return articles.map(article => ({
-          url: `/articles/${article.id}`,
-          lastmod: article.publishedAt,
-          priority: 0.7,
-        }));
-      } catch (error) {
-        console.error('Failed to fetch articles for sitemap:', error);
-        return [];
-      }
-    },
+    sources: [
+      '/api/__sitemap__/urls',
+    ]
   },
   robots: {
     UserAgent: '*',
