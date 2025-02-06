@@ -2,6 +2,9 @@ import { defineNuxtConfig } from "nuxt/config";
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  plugins: [
+    { src: '~/plugins/adsense.client.js', mode: 'client' }
+  ],
   nitro: {
     preset: 'netlify'
   },
@@ -32,6 +35,13 @@ export default defineNuxtConfig({
   },
   app: {
     head: {
+      script: [
+        {
+          async: true,
+          src: 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1638187422634927',
+          crossorigin: 'anonymous'
+        }
+      ],
       title: 'Döwür News',
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1' },
